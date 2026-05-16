@@ -1,10 +1,12 @@
 import {
-  bakeryCampaign,
+  Campaign,
   CampaignDifficulty,
   CampaignLesson,
 } from "@/app/data/paris/bakeryCampaign";
 
 type CampaignHubProps = {
+  campaign: Campaign;
+
   selectedLevel: CampaignDifficulty;
   unlockedLevels: CampaignDifficulty[];
   completedLessons: string[];
@@ -17,6 +19,7 @@ type CampaignHubProps = {
 };
 
 export function CampaignHub({
+  campaign,
   selectedLevel,
   unlockedLevels,
   completedLessons,
@@ -26,7 +29,7 @@ export function CampaignHub({
   onOpenLesson,
   onOpenIdiomSideQuest,
 }: CampaignHubProps) {
-  const activeLessons = bakeryCampaign.lessons.filter(
+  const activeLessons = campaign.lessons.filter(
     (lesson) => lesson.difficulty === selectedLevel
   );
 
@@ -45,10 +48,10 @@ export function CampaignHub({
             Campaign
           </p>
 
-          <h1 className="mt-2 text-4xl font-bold">{bakeryCampaign.title}</h1>
+          <h1 className="mt-2 text-4xl font-bold">{campaign.title}</h1>
 
           <p className="mt-3 text-lg text-stone-600">
-            {bakeryCampaign.description}
+            {campaign.description}
           </p>
 
           <div className="mt-6 flex gap-2">
@@ -85,12 +88,12 @@ export function CampaignHub({
                 </p>
 
                 <h2 className="mt-1 text-2xl font-bold text-yellow-950">
-                  {breadIdiomsComplete ? "✅ " : ""}Bread Idioms
+                  {breadIdiomsComplete ? "✅ " : ""}Idioms
                 </h2>
 
                 <p className="mt-1 text-yellow-900">
-                  Complete 3 short modules of food idioms and earn the 🥖 Bread
-                  Philosopher badge.
+                  Complete 3 short modules of local expressions and earn a bonus
+                  badge.
                 </p>
               </div>
 

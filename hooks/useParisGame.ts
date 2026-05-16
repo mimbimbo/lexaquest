@@ -16,8 +16,18 @@ import {
 } from "@/app/data/paris/bakeryCampaign";
 
 import { bakeryTypingChallenges } from "@/app/data/paris/bakeryTyping";
-
 import { bakeryCultureReadings } from "@/app/data/paris/bakeryCulture";
+
+import {
+  ParisCampaignId,
+  parisCampaigns,
+} from "@/app/data/paris/campaigns";
+
+import { placeDesVosgesVocab } from "@/app/data/paris/placeDesVosgesVocab";
+import { placeDesVosgesTypingChallenges } from "@/app/data/paris/placeDesVosgesTyping";
+import { placeDesVosgesCultureReadings } from "@/app/data/paris/placeDesVosgesCulture";
+import { placeDesVosgesIdioms } from "@/app/data/paris/placeDesVosgesIdioms";
+import { placeDesVosgesQuests } from "@/app/data/paris/placeDesVosgesQuest";
 
 type Screen =
   | "onboarding"
@@ -40,64 +50,134 @@ type VocabStats = Record<
 export function useParisGame() {
   const [screen, setScreen] = useState<Screen>("onboarding");
 
+  const [activeCampaignId, setActiveCampaignId] =
+    useState<ParisCampaignId>("bakery");
+
+  const activeCampaign = parisCampaigns[activeCampaignId];
+
   const [selectedLevel, setSelectedLevel] =
     useState<CampaignDifficulty>("beginner");
 
   const [selectedSection, setSelectedSection] =
     useState<CampaignSection>("section1");
 
-  const [unlockedLevels, setUnlockedLevels] = useState<CampaignDifficulty[]>([
-    "beginner",
-  ]);
+  const [unlockedLevels, setUnlockedLevels] = useState<
+    CampaignDifficulty[]
+  >(["beginner"]);
 
-  const [currentLessonId, setCurrentLessonId] = useState<string | null>(null);
+  const [currentLessonId, setCurrentLessonId] =
+    useState<string | null>(null);
 
   const [xp, setXp] = useState(0);
+
   const [badges, setBadges] = useState<string[]>([]);
-  const [completedLocations, setCompletedLocations] = useState<string[]>([]);
-  const [completedLessons, setCompletedLessons] = useState<string[]>([]);
-  const [completedSideQuests, setCompletedSideQuests] = useState<string[]>([]);
+
+  const [completedLocations, setCompletedLocations] =
+    useState<string[]>([]);
+
+  const [completedLessons, setCompletedLessons] =
+    useState<string[]>([]);
+
+  const [completedSideQuests, setCompletedSideQuests] =
+    useState<string[]>([]);
 
   const [vocabIndex, setVocabIndex] = useState(0);
-  const [vocabFeedback, setVocabFeedback] = useState<string | null>(null);
-  const [vocabStats, setVocabStats] = useState<VocabStats>({});
+
+  const [vocabFeedback, setVocabFeedback] =
+    useState<string | null>(null);
+
+  const [vocabStats, setVocabStats] =
+    useState<VocabStats>({});
 
   const [typingIndex, setTypingIndex] = useState(0);
-  const [typedAnswer, setTypedAnswer] = useState("");
-  const [typingFeedback, setTypingFeedback] = useState<string | null>(null);
 
-  const [currentNodeId, setCurrentNodeId] = useState(
-    bakeryQuests.beginner.startNodeId
-  );
-  const [dialogueFeedback, setDialogueFeedback] = useState<string | null>(null);
+  const [typedAnswer, setTypedAnswer] = useState("");
+
+  const [typingFeedback, setTypingFeedback] =
+    useState<string | null>(null);
+
+  const [currentNodeId, setCurrentNodeId] =
+    useState("start");
+
+  const [dialogueFeedback, setDialogueFeedback] =
+    useState<string | null>(null);
 
   const [idiomSection, setIdiomSection] =
     useState<CampaignSection>("section1");
+
   const [idiomIndex, setIdiomIndex] = useState(0);
-  const [idiomFeedback, setIdiomFeedback] = useState<string | null>(null);
-  const [idiomAnswered, setIdiomAnswered] = useState(false);
-  const [idiomSelectedAnswer, setIdiomSelectedAnswer] = useState<string | null>(
-    null
-  );
 
-  const [cultureQuestionIndex, setCultureQuestionIndex] = useState(0);
-  const [cultureAnswered, setCultureAnswered] = useState(false);
-  const [cultureSelectedAnswer, setCultureSelectedAnswer] = useState<
-    string | null
-  >(null);
+  const [idiomFeedback, setIdiomFeedback] =
+    useState<string | null>(null);
 
-  const currentQuest = bakeryQuests[selectedLevel as QuestLevel];
+  const [idiomAnswered, setIdiomAnswered] =
+    useState(false);
+
+  const [idiomSelectedAnswer, setIdiomSelectedAnswer] =
+    useState<string | null>(null);
+
+  const [cultureQuestionIndex, setCultureQuestionIndex] =
+    useState(0);
+
+  const [cultureAnswered, setCultureAnswered] =
+    useState(false);
+
+  const [cultureSelectedAnswer, setCultureSelectedAnswer] =
+    useState<string | null>(null);
+
+  // =========================
+  // ACTIVE CAMPAIGN CONTENT
+  // =========================
+
+  const activeVocab =
+    activeCampaignId === "bakery"
+      ? bakeryVocab
+      : placeDesVosgesVocab;
+
+  const activeTyping =
+    activeCampaignId === "bakery"
+      ? bakeryTypingChallenges
+      : placeDesVosgesTypingChallenges;
+
+  const activeCulture =
+    activeCampaignId === "bakery"
+      ? bakeryCultureReadings
+      : placeDesVosgesCultureReadings;
+
+  const activeIdioms =
+    activeCampaignId === "bakery"
+      ? bakeryIdioms
+      : placeDesVosgesIdioms;
+
+  const activeQuests =
+    activeCampaignId === "bakery"
+      ? bakeryQuests
+      : placeDesVosgesQuests;
+
+  // =========================
+  // CURRENT QUEST
+  // =========================
+
+  const currentQuest =
+    activeQuests[selectedLevel as QuestLevel];
 
   const currentNode =
-    currentQuest.nodes.find((node) => node.id === currentNodeId) ??
-    currentQuest.nodes[0];
+    currentQuest.nodes.find(
+      (node) => node.id === currentNodeId
+    ) ?? currentQuest.nodes[0];
+
+  // =========================
+  // VOCAB
+  // =========================
 
   const currentVocabItems = useMemo(() => {
-    const sectionItems = bakeryVocab.filter(
-      (item) => item.level === selectedLevel && item.section === selectedSection
+    const sectionItems = activeVocab.filter(
+      (item) =>
+        item.level === selectedLevel &&
+        item.section === selectedSection
     );
 
-    const weakItems = bakeryVocab.filter((item) => {
+    const weakItems = activeVocab.filter((item) => {
       const stats = vocabStats[item.id];
 
       if (!stats) return false;
@@ -113,44 +193,75 @@ export function useParisGame() {
 
     return combined.filter(
       (item, index, array) =>
-        array.findIndex((other) => other.id === item.id) === index
+        array.findIndex(
+          (other) => other.id === item.id
+        ) === index
     );
-  }, [selectedLevel, selectedSection, vocabStats]);
+  }, [
+    activeVocab,
+    selectedLevel,
+    selectedSection,
+    vocabStats,
+  ]);
 
-  const currentVocab = currentVocabItems[vocabIndex];
+  const currentVocab =
+    currentVocabItems[vocabIndex];
 
   const vocabAnswers = currentVocab
-    ? [currentVocab.meaning, ...currentVocab.distractors].sort(
-        () => Math.random() - 0.5
-      )
+    ? [
+        currentVocab.meaning,
+        ...currentVocab.distractors,
+      ].sort(() => Math.random() - 0.5)
     : [];
 
-  const currentTypingItems = bakeryTypingChallenges.filter(
-    (item) => item.level === selectedLevel && item.section === selectedSection
-  );
+  // =========================
+  // TYPING
+  // =========================
 
-  const currentTyping = currentTypingItems[typingIndex];
+  const currentTypingItems =
+    activeTyping.filter(
+      (item) =>
+        item.level === selectedLevel &&
+        item.section === selectedSection
+    );
 
-  const currentIdiomItems = bakeryIdioms.filter(
-    (item) => item.section === idiomSection
-  );
+  const currentTyping =
+    currentTypingItems[typingIndex];
 
-  const currentIdiom = currentIdiomItems[idiomIndex];
+  // =========================
+  // IDIOMS
+  // =========================
+
+  const currentIdiomItems =
+    activeIdioms.filter(
+      (item) => item.section === idiomSection
+    );
+
+  const currentIdiom =
+    currentIdiomItems[idiomIndex];
 
   const idiomAnswers = currentIdiom
-    ? [currentIdiom.meaning, ...currentIdiom.distractors].sort(
-        () => Math.random() - 0.5
-      )
+    ? [
+        currentIdiom.meaning,
+        ...currentIdiom.distractors,
+      ].sort(() => Math.random() - 0.5)
     : [];
 
+  // =========================
+  // CULTURE
+  // =========================
+
   const currentCultureReading =
-    bakeryCultureReadings.find(
+    activeCulture.find(
       (reading) =>
-        reading.level === selectedLevel && reading.section === selectedSection
+        reading.level === selectedLevel &&
+        reading.section === selectedSection
     ) ?? null;
 
   const currentCultureQuestion =
-    currentCultureReading?.questions[cultureQuestionIndex] ?? null;
+    currentCultureReading?.questions[
+      cultureQuestionIndex
+    ] ?? null;
 
   const cultureAnswers = currentCultureQuestion
     ? [
@@ -159,42 +270,90 @@ export function useParisGame() {
       ].sort(() => Math.random() - 0.5)
     : [];
 
-  const bakeryComplete = completedLocations.includes("bakery");
-  const breadIdiomsComplete = completedSideQuests.includes("bread-idioms");
+  // =========================
+  // COMPLETION
+  // =========================
+
+  const bakeryComplete =
+    completedLocations.includes("bakery");
+
+  const vosgesComplete =
+    completedLocations.includes(
+      "place-des-vosges"
+    );
+
+  const breadIdiomsComplete =
+    completedSideQuests.includes(
+      "bread-idioms"
+    );
+
+  // =========================
+  // HELPERS
+  // =========================
 
   function addBadge(badge: string) {
     if (!badges.includes(badge)) {
-      setBadges((current) => [...current, badge]);
+      setBadges((current) => [
+        ...current,
+        badge,
+      ]);
     }
   }
 
   function completeLesson(lessonId: string) {
     if (!completedLessons.includes(lessonId)) {
-      setCompletedLessons((current) => [...current, lessonId]);
+      setCompletedLessons((current) => [
+        ...current,
+        lessonId,
+      ]);
     }
   }
 
   function completeLocation(locationId: string) {
-    if (!completedLocations.includes(locationId)) {
-      setCompletedLocations((current) => [...current, locationId]);
+    if (
+      !completedLocations.includes(locationId)
+    ) {
+      setCompletedLocations((current) => [
+        ...current,
+        locationId,
+      ]);
     }
   }
 
   function completeSideQuest(sideQuestId: string) {
-    if (!completedSideQuests.includes(sideQuestId)) {
-      setCompletedSideQuests((current) => [...current, sideQuestId]);
+    if (
+      !completedSideQuests.includes(
+        sideQuestId
+      )
+    ) {
+      setCompletedSideQuests((current) => [
+        ...current,
+        sideQuestId,
+      ]);
     }
   }
 
-  function unlockLevel(level: CampaignDifficulty) {
+  function unlockLevel(
+    level: CampaignDifficulty
+  ) {
     if (!unlockedLevels.includes(level)) {
-      setUnlockedLevels((current) => [...current, level]);
+      setUnlockedLevels((current) => [
+        ...current,
+        level,
+      ]);
     }
   }
 
-  function unlockNextLevelAfter(level: CampaignDifficulty) {
-    if (level === "beginner") unlockLevel("intermediate");
-    if (level === "intermediate") unlockLevel("advanced");
+  function unlockNextLevelAfter(
+    level: CampaignDifficulty
+  ) {
+    if (level === "beginner") {
+      unlockLevel("intermediate");
+    }
+
+    if (level === "intermediate") {
+      unlockLevel("advanced");
+    }
   }
 
   function normalizeAnswer(value: string) {
@@ -205,19 +364,48 @@ export function useParisGame() {
       .replace(/[\u0300-\u036f]/g, "");
   }
 
-  function chooseStartingLevel(level: CampaignDifficulty) {
+  // =========================
+  // NAVIGATION
+  // =========================
+
+  function chooseStartingLevel(
+    level: CampaignDifficulty
+  ) {
     setSelectedLevel(level);
     setUnlockedLevels([level]);
     setScreen("map");
   }
 
-  function selectCampaignLevel(level: CampaignDifficulty) {
-    if (!unlockedLevels.includes(level)) return;
+  function openBakeryCampaign() {
+    setActiveCampaignId("bakery");
+    setScreen("campaign");
+  }
+
+  function openVosgesCampaign() {
+    setActiveCampaignId(
+      "place-des-vosges"
+    );
+    setScreen("campaign");
+  }
+
+  function selectCampaignLevel(
+    level: CampaignDifficulty
+  ) {
+    if (!unlockedLevels.includes(level))
+      return;
+
     setSelectedLevel(level);
   }
 
-  function openLesson(lesson: CampaignLesson) {
+  // =========================
+  // OPEN LESSON
+  // =========================
+
+  function openLesson(
+    lesson: CampaignLesson
+  ) {
     setCurrentLessonId(lesson.id);
+
     setSelectedSection(lesson.section);
 
     if (lesson.type === "vocab") {
@@ -234,39 +422,72 @@ export function useParisGame() {
     }
 
     if (lesson.type === "dialogue") {
-      const quest = bakeryQuests[selectedLevel as QuestLevel];
+      setCurrentNodeId(
+        currentQuest.startNodeId
+      );
 
-      setCurrentNodeId(quest.startNodeId);
       setDialogueFeedback(null);
+
       setScreen("bakery");
     }
 
     if (lesson.type === "culture") {
       setCultureQuestionIndex(0);
+
       setCultureAnswered(false);
+
       setCultureSelectedAnswer(null);
+
       setScreen("culture");
     }
   }
 
-  function startIdiomSideQuest(section: CampaignSection = "section1") {
+  // =========================
+  // SIDE QUESTS
+  // =========================
+
+  function startIdiomSideQuest(
+    section: CampaignSection = "section1"
+  ) {
     setIdiomSection(section);
+
     setIdiomIndex(0);
+
     setIdiomFeedback(null);
+
     setIdiomAnswered(false);
+
     setIdiomSelectedAnswer(null);
+
     setScreen("idioms");
   }
 
-  function recordVocabAnswer(vocabId: string, correct: boolean) {
+  // =========================
+  // VOCAB
+  // =========================
+
+  function recordVocabAnswer(
+    vocabId: string,
+    correct: boolean
+  ) {
     setVocabStats((current) => {
-      const existing = current[vocabId] ?? { correct: 0, incorrect: 0 };
+      const existing =
+        current[vocabId] ?? {
+          correct: 0,
+          incorrect: 0,
+        };
 
       return {
         ...current,
+
         [vocabId]: {
-          correct: existing.correct + (correct ? 1 : 0),
-          incorrect: existing.incorrect + (correct ? 0 : 1),
+          correct:
+            existing.correct +
+            (correct ? 1 : 0),
+
+          incorrect:
+            existing.incorrect +
+            (correct ? 0 : 1),
         },
       };
     });
@@ -275,61 +496,114 @@ export function useParisGame() {
   function handleVocabAnswer(answer: string) {
     if (!currentVocab) return;
 
-    const isCorrect = answer === currentVocab.meaning;
+    const isCorrect =
+      answer === currentVocab.meaning;
 
-    recordVocabAnswer(currentVocab.id, isCorrect);
+    recordVocabAnswer(
+      currentVocab.id,
+      isCorrect
+    );
 
     if (!isCorrect) {
-      setVocabFeedback("Not quite. Try again.");
+      setVocabFeedback(
+        "Not quite. Try again."
+      );
+
       return;
     }
 
     setVocabFeedback(null);
+
     setXp((current) => current + 5);
 
-    if (vocabIndex < currentVocabItems.length - 1) {
-      setVocabIndex((current) => current + 1);
+    if (
+      vocabIndex <
+      currentVocabItems.length - 1
+    ) {
+      setVocabIndex(
+        (current) => current + 1
+      );
+
       return;
     }
 
-    if (currentLessonId) completeLesson(currentLessonId);
+    if (currentLessonId) {
+      completeLesson(currentLessonId);
+    }
 
     setScreen("campaign");
   }
 
+  // =========================
+  // TYPING
+  // =========================
+
   function checkTypingAnswer() {
     if (!currentTyping) return;
 
-    const userAnswer = normalizeAnswer(typedAnswer);
-    const acceptedAnswers = currentTyping.answers.map(normalizeAnswer);
+    const userAnswer =
+      normalizeAnswer(typedAnswer);
 
-    if (!acceptedAnswers.includes(userAnswer)) {
-      setTypingFeedback(`Not quite. Hint: ${currentTyping.hint}`);
+    const acceptedAnswers =
+      currentTyping.answers.map(
+        normalizeAnswer
+      );
+
+    if (
+      !acceptedAnswers.includes(userAnswer)
+    ) {
+      setTypingFeedback(
+        `Not quite. Hint: ${currentTyping.hint}`
+      );
+
       return;
     }
 
     setXp((current) => current + 10);
-    setTypingFeedback(`Correct! ${currentTyping.explanation}`);
+
+    setTypingFeedback(
+      `Correct! ${currentTyping.explanation}`
+    );
 
     setTimeout(() => {
-      if (typingIndex < currentTypingItems.length - 1) {
-        setTypingIndex((current) => current + 1);
+      if (
+        typingIndex <
+        currentTypingItems.length - 1
+      ) {
+        setTypingIndex(
+          (current) => current + 1
+        );
+
         setTypedAnswer("");
+
         setTypingFeedback(null);
+
         return;
       }
 
-      if (currentLessonId) completeLesson(currentLessonId);
+      if (currentLessonId) {
+        completeLesson(currentLessonId);
+      }
 
       setScreen("campaign");
     }, 900);
   }
 
-  function chooseDialogueAnswer(choice: DialogueChoice) {
-    setDialogueFeedback(choice.feedback ?? null);
+  // =========================
+  // DIALOGUE
+  // =========================
+
+  function chooseDialogueAnswer(
+    choice: DialogueChoice
+  ) {
+    setDialogueFeedback(
+      choice.feedback ?? null
+    );
 
     if (choice.correct && choice.xp) {
-      setXp((current) => current + choice.xp!);
+      setXp(
+        (current) => current + choice.xp!
+      );
     }
 
     if (choice.nextId) {
@@ -338,22 +612,55 @@ export function useParisGame() {
 
     if (choice.nextId === "success") {
       addBadge(currentQuest.successBadge);
-      completeLocation("bakery");
 
-      if (currentLessonId) completeLesson(currentLessonId);
+      if (
+        activeCampaignId === "bakery"
+      ) {
+        completeLocation("bakery");
+      }
 
-      unlockNextLevelAfter(selectedLevel);
+      if (
+        activeCampaignId ===
+        "place-des-vosges"
+      ) {
+        completeLocation(
+          "place-des-vosges"
+        );
+      }
+
+      if (currentLessonId) {
+        completeLesson(currentLessonId);
+      }
+
+      unlockNextLevelAfter(
+        selectedLevel
+      );
     }
   }
 
-  function handleIdiomAnswer(answer: string) {
-    if (!currentIdiom || idiomAnswered) return;
+  // =========================
+  // IDIOMS
+  // =========================
+
+  function handleIdiomAnswer(
+    answer: string
+  ) {
+    if (
+      !currentIdiom ||
+      idiomAnswered
+    ) {
+      return;
+    }
 
     setIdiomSelectedAnswer(answer);
+
     setIdiomAnswered(true);
 
-    if (answer === currentIdiom.meaning) {
+    if (
+      answer === currentIdiom.meaning
+    ) {
       setXp((current) => current + 10);
+
       setIdiomFeedback("Correct!");
     } else {
       setIdiomFeedback("Not quite.");
@@ -363,11 +670,20 @@ export function useParisGame() {
   function nextIdiom() {
     if (!idiomAnswered) return;
 
-    if (idiomIndex < currentIdiomItems.length - 1) {
-      setIdiomIndex((current) => current + 1);
+    if (
+      idiomIndex <
+      currentIdiomItems.length - 1
+    ) {
+      setIdiomIndex(
+        (current) => current + 1
+      );
+
       setIdiomFeedback(null);
+
       setIdiomAnswered(false);
+
       setIdiomSelectedAnswer(null);
+
       return;
     }
 
@@ -380,43 +696,86 @@ export function useParisGame() {
 
     if (nextSection) {
       setIdiomSection(nextSection);
+
       setIdiomIndex(0);
+
       setIdiomFeedback(null);
+
       setIdiomAnswered(false);
+
       setIdiomSelectedAnswer(null);
+
       return;
     }
 
     addBadge("🥖 Bread Philosopher");
-    completeSideQuest("bread-idioms");
+
+    completeSideQuest(
+      "bread-idioms"
+    );
+
     setXp((current) => current + 50);
+
     setScreen("campaign");
   }
 
-  function handleCultureAnswer(answer: string) {
-    if (!currentCultureQuestion || cultureAnswered) return;
+  // =========================
+  // CULTURE
+  // =========================
+
+  function handleCultureAnswer(
+    answer: string
+  ) {
+    if (
+      !currentCultureQuestion ||
+      cultureAnswered
+    ) {
+      return;
+    }
 
     setCultureSelectedAnswer(answer);
+
     setCultureAnswered(true);
 
-    if (answer === currentCultureQuestion.correctAnswer) {
+    if (
+      answer ===
+      currentCultureQuestion.correctAnswer
+    ) {
       setXp((current) => current + 10);
     }
   }
 
   function nextCultureQuestion() {
-    if (!currentCultureReading || !cultureAnswered) return;
-
-    if (cultureQuestionIndex < currentCultureReading.questions.length - 1) {
-      setCultureQuestionIndex((current) => current + 1);
-      setCultureAnswered(false);
-      setCultureSelectedAnswer(null);
+    if (
+      !currentCultureReading ||
+      !cultureAnswered
+    ) {
       return;
     }
 
-    if (currentLessonId) completeLesson(currentLessonId);
+    if (
+      cultureQuestionIndex <
+      currentCultureReading.questions
+        .length -
+        1
+    ) {
+      setCultureQuestionIndex(
+        (current) => current + 1
+      );
+
+      setCultureAnswered(false);
+
+      setCultureSelectedAnswer(null);
+
+      return;
+    }
+
+    if (currentLessonId) {
+      completeLesson(currentLessonId);
+    }
 
     setXp((current) => current + 20);
+
     setScreen("campaign");
   }
 
@@ -424,10 +783,14 @@ export function useParisGame() {
     screen,
     setScreen,
 
+    activeCampaignId,
+    activeCampaign,
+
     xp,
     badges,
 
     bakeryComplete,
+    vosgesComplete,
     breadIdiomsComplete,
 
     selectedLevel,
@@ -470,6 +833,9 @@ export function useParisGame() {
     chooseStartingLevel,
     selectCampaignLevel,
     openLesson,
+
+    openBakeryCampaign,
+    openVosgesCampaign,
 
     setTypedAnswer,
 

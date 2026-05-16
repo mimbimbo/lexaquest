@@ -1,0 +1,201 @@
+export type VosgesTypingLevel = "beginner" | "intermediate" | "advanced";
+export type VosgesTypingSection = "section1" | "section2" | "section3";
+
+export type PlaceDesVosgesTypingChallenge = {
+  id: string;
+  level: VosgesTypingLevel;
+  section: VosgesTypingSection;
+  english: string;
+  prompt: string;
+  answers: string[];
+  hint: string;
+  explanation: string;
+};
+
+export const placeDesVosgesTypingChallenges: PlaceDesVosgesTypingChallenge[] = [
+  {
+    id: "vosges-beginner-section1-ou",
+    level: "beginner",
+    section: "section1",
+    english: "Where is Place des Vosges?",
+    prompt: "_____ est la place des Vosges ?",
+    answers: ["où", "ou"],
+    hint: "The French word for “where.”",
+    explanation: "“Où” means “where.”",
+  },
+  {
+    id: "vosges-beginner-section1-cherche",
+    level: "beginner",
+    section: "section1",
+    english: "I’m looking for Place des Vosges.",
+    prompt: "Je _____ la place des Vosges.",
+    answers: ["cherche"],
+    hint: "From chercher: to look for.",
+    explanation: "“Je cherche…” means “I’m looking for…”",
+  },
+  {
+    id: "vosges-beginner-section1-gauche",
+    level: "beginner",
+    section: "section1",
+    english: "Turn left.",
+    prompt: "Tournez à _____.",
+    answers: ["gauche"],
+    hint: "The opposite of droite.",
+    explanation: "“À gauche” means “to the left.”",
+  },
+  {
+    id: "vosges-beginner-section1-droit",
+    level: "beginner",
+    section: "section1",
+    english: "Go straight ahead.",
+    prompt: "Allez tout _____.",
+    answers: ["droit"],
+    hint: "The phrase is “tout droit.”",
+    explanation: "“Tout droit” means “straight ahead.”",
+  },
+
+  {
+    id: "vosges-beginner-section3-jardin",
+    level: "beginner",
+    section: "section3",
+    english: "There is a garden.",
+    prompt: "Il y a un _____.",
+    answers: ["jardin"],
+    hint: "A green place with trees.",
+    explanation: "“Un jardin” means “a garden.”",
+  },
+  {
+    id: "vosges-beginner-section3-beau",
+    level: "beginner",
+    section: "section3",
+    english: "It’s beautiful.",
+    prompt: "C’est _____.",
+    answers: ["beau"],
+    hint: "Masculine form of beautiful.",
+    explanation: "“C’est beau” means “it’s beautiful.”",
+  },
+  {
+    id: "vosges-beginner-section3-calme",
+    level: "beginner",
+    section: "section3",
+    english: "It’s peaceful.",
+    prompt: "C’est _____.",
+    answers: ["calme"],
+    hint: "It also looks like the English word calm.",
+    explanation: "“C’est calme” means “it’s calm / peaceful.”",
+  },
+  {
+    id: "vosges-beginner-section3-jaime",
+    level: "beginner",
+    section: "section3",
+    english: "I like the garden.",
+    prompt: "J’_____ le jardin.",
+    answers: ["aime"],
+    hint: "From aimer.",
+    explanation: "“J’aime…” means “I like…”",
+  },
+
+  {
+    id: "vosges-intermediate-section1-arcades",
+    level: "intermediate",
+    section: "section1",
+    english: "The square is famous for its arcades.",
+    prompt: "La place est célèbre pour ses _____.",
+    answers: ["arcades"],
+    hint: "Covered arches around the square.",
+    explanation: "“Les arcades” are the covered arches around Place des Vosges.",
+  },
+  {
+    id: "vosges-intermediate-section1-facades",
+    level: "intermediate",
+    section: "section1",
+    english: "The façades are very regular.",
+    prompt: "Les _____ sont très régulières.",
+    answers: ["façades", "facades"],
+    hint: "Building fronts.",
+    explanation: "“Les façades” are the fronts of buildings.",
+  },
+  {
+    id: "vosges-intermediate-section1-briques",
+    level: "intermediate",
+    section: "section1",
+    english: "I see red bricks.",
+    prompt: "Je vois des _____ rouges.",
+    answers: ["briques"],
+    hint: "Bricks.",
+    explanation: "“Des briques rouges” means “red bricks.”",
+  },
+
+  {
+    id: "vosges-intermediate-section3-trouve",
+    level: "intermediate",
+    section: "section3",
+    english: "I find the square very beautiful.",
+    prompt: "Je _____ la place très belle.",
+    answers: ["trouve"],
+    hint: "Use trouver: to find / to think.",
+    explanation: "“Je trouve la place très belle” means “I find the square very beautiful.”",
+  },
+  {
+    id: "vosges-intermediate-section3-ambiance",
+    level: "intermediate",
+    section: "section3",
+    english: "I like the atmosphere.",
+    prompt: "J’aime l’_____.",
+    answers: ["ambiance"],
+    hint: "Atmosphere / vibe.",
+    explanation: "“L’ambiance” means “the atmosphere” or “the vibe.”",
+  },
+  {
+    id: "vosges-intermediate-section3-plait",
+    level: "intermediate",
+    section: "section3",
+    english: "I like it.",
+    prompt: "Ça me _____.",
+    answers: ["plaît", "plait"],
+    hint: "The phrase is “ça me plaît.”",
+    explanation: "“Ça me plaît” means “I like it.”",
+  },
+
+  {
+    id: "vosges-advanced-section1-urbanisme",
+    level: "advanced",
+    section: "section1",
+    english: "Urban planning shapes the city.",
+    prompt: "L’_____ façonne la ville.",
+    answers: ["urbanisme"],
+    hint: "A word for urban planning.",
+    explanation: "“L’urbanisme” means urban planning.",
+  },
+  {
+    id: "vosges-advanced-section1-patrimoine",
+    level: "advanced",
+    section: "section1",
+    english: "This square is part of Parisian heritage.",
+    prompt: "Cette place fait partie du _____ parisien.",
+    answers: ["patrimoine"],
+    hint: "Heritage.",
+    explanation: "“Le patrimoine” means heritage.",
+  },
+
+  {
+    id: "vosges-advanced-section3-fois",
+    level: "advanced",
+    section: "section3",
+    english: "It is both beautiful and political.",
+    prompt: "Elle est à la _____ belle et politique.",
+    answers: ["fois"],
+    hint: "The phrase is “à la fois.”",
+    explanation: "“À la fois” means “both / at the same time.”",
+  },
+  {
+    id: "vosges-advanced-section3-nuancee",
+    level: "advanced",
+    section: "section3",
+    english: "That is a nuanced opinion.",
+    prompt: "C’est une opinion _____.",
+    answers: ["nuancée", "nuancee"],
+    hint: "Feminine form of nuancé.",
+    explanation: "“Une opinion nuancée” means “a nuanced opinion.”",
+  },
+];

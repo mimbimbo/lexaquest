@@ -2,7 +2,6 @@
 
 import { useParisGame } from "@/hooks/useParisGame";
 
-import { CultureLesson } from "@/components/paris/CultureLesson";
 import { PlayerStatus } from "@/components/paris/PlayerStatus";
 import { ParisMap } from "@/components/paris/ParisMap";
 import { CampaignHub } from "@/components/paris/CampaignHub";
@@ -11,6 +10,7 @@ import { VocabLesson } from "@/components/paris/VocabLesson";
 import { TypingLesson } from "@/components/paris/TypingLesson";
 import { DialogueLesson } from "@/components/paris/DialogueLesson";
 import { IdiomLesson } from "@/components/paris/IdiomLesson";
+import { CultureLesson } from "@/components/paris/CultureLesson";
 
 export default function ParisPage() {
   const game = useParisGame();
@@ -22,6 +22,7 @@ export default function ParisPage() {
   if (game.screen === "campaign") {
     return (
       <CampaignHub
+        campaign={game.activeCampaign}
         selectedLevel={game.selectedLevel}
         unlockedLevels={game.unlockedLevels}
         completedLessons={game.completedLessons}
@@ -102,21 +103,23 @@ export default function ParisPage() {
       />
     );
   }
-if (game.screen === "culture" && game.currentCultureReading) {
-  return (
-    <CultureLesson
-      currentReading={game.currentCultureReading}
-      answers={game.cultureAnswers}
-      selectedAnswer={game.cultureSelectedAnswer}
-      answered={game.cultureAnswered}
-      questionIndex={game.cultureQuestionIndex}
-      xp={game.xp}
-      onBack={() => game.setScreen("campaign")}
-      onAnswer={game.handleCultureAnswer}
-      onNext={game.nextCultureQuestion}
-    />
-  );
-}
+
+  if (game.screen === "culture" && game.currentCultureReading) {
+    return (
+      <CultureLesson
+        currentReading={game.currentCultureReading}
+        answers={game.cultureAnswers}
+        selectedAnswer={game.cultureSelectedAnswer}
+        answered={game.cultureAnswered}
+        questionIndex={game.cultureQuestionIndex}
+        xp={game.xp}
+        onBack={() => game.setScreen("campaign")}
+        onAnswer={game.handleCultureAnswer}
+        onNext={game.nextCultureQuestion}
+      />
+    );
+  }
+
   return (
     <main className="min-h-screen bg-stone-100 p-6 text-stone-900">
       <div className="mx-auto max-w-5xl">
@@ -135,7 +138,9 @@ if (game.screen === "culture" && game.currentCultureReading) {
 
         <ParisMap
           bakeryComplete={game.bakeryComplete}
-          onOpenBakery={() => game.setScreen("campaign")}
+          vosgesComplete={game.vosgesComplete}
+          onOpenBakery={game.openBakeryCampaign}
+          onOpenVosges={game.openVosgesCampaign}
         />
       </div>
     </main>

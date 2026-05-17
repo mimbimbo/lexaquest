@@ -3,7 +3,7 @@
 import { useParisGame } from "@/hooks/useParisGame";
 
 import { PlayerStatus } from "@/components/paris/PlayerStatus";
-import { ParisMap } from "@/components/paris/ParisMap";
+import { MaraisCrossroads } from "@/components/paris/MaraisCrossroads";
 import { CampaignHub } from "@/components/paris/CampaignHub";
 import { OnboardingScreen } from "@/components/paris/OnboardingScreen";
 import { VocabLesson } from "@/components/paris/VocabLesson";
@@ -136,12 +136,15 @@ export default function ParisPage() {
 
         <PlayerStatus xp={game.xp} badges={game.badges} />
 
-        <ParisMap
-          bakeryComplete={game.bakeryComplete}
-          vosgesComplete={game.vosgesComplete}
-          onOpenBakery={game.openBakeryCampaign}
-          onOpenVosges={game.openVosgesCampaign}
-        />
+       
+
+
+       <MaraisCrossroads
+  bakeryComplete={game.bakeryComplete}
+  vosgesComplete={game.vosgesComplete}
+  onOpenBakery={game.openBakeryCampaign}
+  onOpenVosges={game.openVosgesCampaign}
+/>
       </div>
     </main>
   );

@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
 
+import { playCorrectSound, playWrongSound } from "@/utils/playSound";
+
 import {
   bakeryQuests,
   QuestLevel,
@@ -504,13 +506,15 @@ export function useParisGame() {
       isCorrect
     );
 
-    if (!isCorrect) {
-      setVocabFeedback(
-        "Not quite. Try again."
-      );
+   if (!isCorrect) {
+  playWrongSound();
 
-      return;
-    }
+  setVocabFeedback("Not quite. Try again.");
+
+  return;
+}
+
+playCorrectSound();
 
     setVocabFeedback(null);
 
@@ -549,15 +553,17 @@ export function useParisGame() {
         normalizeAnswer
       );
 
-    if (
-      !acceptedAnswers.includes(userAnswer)
-    ) {
-      setTypingFeedback(
-        `Not quite. Hint: ${currentTyping.hint}`
-      );
+      if (!acceptedAnswers.includes(userAnswer)) {
+  playWrongSound();
 
-      return;
-    }
+  setTypingFeedback(
+    `Not quite. Hint: ${currentTyping.hint}`
+  );
+
+  return;
+}
+
+playCorrectSound();
 
     setXp((current) => current + 10);
 
@@ -600,11 +606,17 @@ export function useParisGame() {
       choice.feedback ?? null
     );
 
-    if (choice.correct && choice.xp) {
-      setXp(
-        (current) => current + choice.xp!
-      );
-    }
+  if (choice.correct && choice.xp) {
+  playCorrectSound();
+
+  setXp(
+    (current) => current + choice.xp!
+  );
+}
+
+if (!choice.correct) {
+  playWrongSound();
+}
 
     if (choice.nextId) {
       setCurrentNodeId(choice.nextId);
@@ -660,9 +672,10 @@ export function useParisGame() {
       answer === currentIdiom.meaning
     ) {
       setXp((current) => current + 10);
-
+playCorrectSound();
       setIdiomFeedback("Correct!");
     } else {
+        playWrongSound();
       setIdiomFeedback("Not quite.");
     }
   }

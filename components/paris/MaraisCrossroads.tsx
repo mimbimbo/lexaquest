@@ -112,12 +112,19 @@ export function MaraisCrossroads({
             </span>
           )}
         </button>
+      </div>
 
-        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 rounded-full bg-black/65 px-4 py-2 text-xs font-semibold text-amber-100 shadow-lg backdrop-blur sm:text-sm">
+      <div className="mt-4 rounded-2xl border border-stone-800 bg-stone-900/90 p-4 text-sm text-stone-300 shadow-lg">
+        <p className="font-semibold text-amber-200">
           {isWalking
-            ? "Walking through Le Marais..."
-            : "Tap a destination to begin your next Paris encounter."}
-        </div>
+            ? "🚶 Walking through Le Marais..."
+            : "🧭 Tap a destination on the map to begin your next Paris encounter."}
+        </p>
+
+        <p className="mt-2 text-stone-400">
+          Explore bakeries, landmarks, cafés, and hidden corners of Paris while
+          building real-world French comprehension.
+        </p>
       </div>
     </section>
   );

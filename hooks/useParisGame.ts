@@ -1,3 +1,5 @@
+import { getRandomConjugationChallenge } from "@/lib/conjugationGenerator";
+
 import {
   useEffect,
   useMemo,
@@ -51,7 +53,8 @@ type Screen =
   | "typing"
   | "bakery"
   | "idioms"
-  | "culture";
+  | "culture"
+  | "conjugation";
 
 type VocabStats = Record<
   string,
@@ -144,6 +147,93 @@ const hasLoadedProgress =
 
   const [cultureSelectedAnswer, setCultureSelectedAnswer] =
     useState<string | null>(null);
+
+    const [conjugationTypedAnswer, setConjugationTypedAnswer] = useState("");
+const [conjugationFeedback, setConjugationFeedback] = useState<string | null>(
+  null
+);
+const [conjugationTimeLeft, setConjugationTimeLeft] = useState(180);
+const [conjugationScore, setConjugationScore] = useState(0);
+const [conjugationStreak, setConjugationStreak] = useState(0);
+const [conjugationGameOver, setConjugationGameOver] = useState(false);
+
+const [currentConjugationChallenge, setCurrentConjugationChallenge] =
+  useState(getRandomConjugationChallenge());
+
+function openConjugationSprint() {
+  setCurrentConjugationChallenge(getRandomConjugationChallenge());
+  setConjugationTypedAnswer("");
+  setConjugationFeedback(null);
+  setConjugationTimeLeft(180);
+  setConjugationScore(0);
+  setConjugationStreak(0);
+  setConjugationGameOver(false);
+  setScreen("conjugation");
+}
+
+function checkConjugationAnswer() {
+  const userAnswer = normalizeAnswer(
+    conjugationTypedAnswer
+  );
+
+  const acceptedAnswers =
+    currentConjugationChallenge.answer
+      .split(";")
+      .map(normalizeAnswer);
+
+  if (!acceptedAnswers.includes(userAnswer)) {
+    playWrongSound();
+    setConjugationFeedback("Not quite.");
+    setConjugationStreak(0);
+    return;
+  }
+
+  playCorrectSound();
+
+  setConjugationFeedback("Correct!");
+
+  setConjugationScore((current) => current + 1);
+
+  setConjugationStreak((current) => current + 1);
+
+  setXp((current) => current + 5);
+
+  setConjugationTypedAnswer("");
+
+  setCurrentConjugationChallenge(
+    getRandomConjugationChallenge()
+  );
+}
+
+function nextConjugationChallenge() {
+  setConjugationTypedAnswer("");
+  setConjugationFeedback(null);
+  setCurrentConjugationChallenge(getRandomConjugationChallenge());
+}
+
+function restartConjugationSprint() {
+  openConjugationSprint();
+}
+
+useEffect(() => {
+  if (screen !== "conjugation") return;
+  if (conjugationGameOver) return;
+
+  if (conjugationTimeLeft <= 0) {
+    setConjugationGameOver(true);
+    return;
+  }
+
+  const timer = setTimeout(() => {
+    setConjugationTimeLeft((current) => current - 1);
+  }, 1000);
+
+  return () => clearTimeout(timer);
+}, [
+  screen,
+  conjugationTimeLeft,
+  conjugationGameOver,
+]);
 
 // =========================
 // LOAD / SAVE PROGRESS
@@ -965,5 +1055,20 @@ playCorrectSound();
 
     handleCultureAnswer,
     nextCultureQuestion,
+
+    currentConjugationChallenge,
+conjugationTypedAnswer,
+conjugationFeedback,
+conjugationTimeLeft,
+conjugationScore,
+conjugationStreak,
+conjugationGameOver,
+
+openConjugationSprint,
+setConjugationTypedAnswer,
+checkConjugationAnswer,
+nextConjugationChallenge,
+restartConjugationSprint,
+
   };
 }

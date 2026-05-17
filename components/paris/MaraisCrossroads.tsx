@@ -8,6 +8,7 @@ type MaraisCrossroadsProps = {
   vosgesComplete: boolean;
   onOpenBakery: () => void;
   onOpenVosges: () => void;
+  onOpenConjugationSprint: () => void;
 };
 
 type Position = {
@@ -37,6 +38,7 @@ export function MaraisCrossroads({
   vosgesComplete,
   onOpenBakery,
   onOpenVosges,
+  onOpenConjugationSprint,
 }: MaraisCrossroadsProps) {
   const [playerPosition, setPlayerPosition] =
     useState<Position>(START_POSITION);
@@ -125,6 +127,17 @@ export function MaraisCrossroads({
           Explore bakeries, landmarks, cafés, and hidden corners of Paris while
           building real-world French comprehension.
         </p>
+
+        {!isWalking && (
+          <div className="mt-4 flex justify-center">
+            <button
+              onClick={onOpenConjugationSprint}
+              className="rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-stone-900 transition hover:bg-stone-200"
+            >
+              ⚡ Enter the Verb Gym
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

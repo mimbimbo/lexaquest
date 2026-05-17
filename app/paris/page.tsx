@@ -11,7 +11,7 @@ import { TypingLesson } from "@/components/paris/TypingLesson";
 import { DialogueLesson } from "@/components/paris/DialogueLesson";
 import { IdiomLesson } from "@/components/paris/IdiomLesson";
 import { CultureLesson } from "@/components/paris/CultureLesson";
-
+import { ConjugationChallenge } from "@/components/paris/ConjugationChallenge";
 
 export default function ParisPage() {
   const game = useParisGame();
@@ -121,6 +121,29 @@ export default function ParisPage() {
     );
   }
 
+  if (game.screen === "conjugation") {
+  return (
+    <ConjugationChallenge
+      infinitive={game.currentConjugationChallenge.infinitive}
+      tense={game.currentConjugationChallenge.tense}
+      pronoun={game.currentConjugationChallenge.pronoun}
+      answer={game.currentConjugationChallenge.answer}
+      typedAnswer={game.conjugationTypedAnswer}
+      feedback={game.conjugationFeedback}
+      xp={game.xp}
+      timeLeft={game.conjugationTimeLeft}
+      score={game.conjugationScore}
+      streak={game.conjugationStreak}
+      isGameOver={game.conjugationGameOver}
+      onTypedAnswerChange={game.setConjugationTypedAnswer}
+      onCheckAnswer={game.checkConjugationAnswer}
+      onNext={game.nextConjugationChallenge}
+      onRestart={game.restartConjugationSprint}
+      onBack={() => game.setScreen("map")}
+    />
+  );
+}
+
   return (
     <main className="min-h-screen bg-stone-100 p-6 text-stone-900">
       <div className="mx-auto max-w-5xl">
@@ -145,6 +168,7 @@ export default function ParisPage() {
   vosgesComplete={game.vosgesComplete}
   onOpenBakery={game.openBakeryCampaign}
   onOpenVosges={game.openVosgesCampaign}
+  onOpenConjugationSprint={game.openConjugationSprint}
 />
       </div>
     </main>

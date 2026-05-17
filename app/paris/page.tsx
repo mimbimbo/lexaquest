@@ -12,6 +12,7 @@ import { DialogueLesson } from "@/components/paris/DialogueLesson";
 import { IdiomLesson } from "@/components/paris/IdiomLesson";
 import { CultureLesson } from "@/components/paris/CultureLesson";
 
+
 export default function ParisPage() {
   const game = useParisGame();
 

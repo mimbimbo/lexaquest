@@ -1,6 +1,18 @@
-import { useMemo, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import { playCorrectSound, playWrongSound } from "@/utils/playSound";
+
+import {
+  getCurrentUser,
+  loadUserProgress,
+  saveUserProgress,
+  updateUserXp,
+} from "@/lib/progress";
 
 import {
   bakeryQuests,
@@ -83,6 +95,12 @@ export function useParisGame() {
   const [completedSideQuests, setCompletedSideQuests] =
     useState<string[]>([]);
 
+    const [userId, setUserId] =
+  useState<string | null>(null);
+
+const hasLoadedProgress =
+  useRef(false);
+
   const [vocabIndex, setVocabIndex] = useState(0);
 
   const [vocabFeedback, setVocabFeedback] =
@@ -126,6 +144,91 @@ export function useParisGame() {
 
   const [cultureSelectedAnswer, setCultureSelectedAnswer] =
     useState<string | null>(null);
+
+// =========================
+// LOAD / SAVE PROGRESS
+// =========================
+
+useEffect(() => {
+  async function loadProgress() {
+    const user = await getCurrentUser();
+
+    if (!user) {
+      hasLoadedProgress.current = true;
+      return;
+    }
+
+    setUserId(user.id);
+
+    const progress =
+      await loadUserProgress(user.id);
+
+  if (progress) {
+  setXp(progress.total_xp ?? 0);
+
+  setCompletedLessons(
+    progress.completed_lessons ?? []
+  );
+
+  setCompletedLocations(
+    progress.completed_locations ?? []
+  );
+
+  setCompletedSideQuests(
+    progress.completed_side_quests ?? []
+  );
+
+  setBadges(
+    progress.badges ?? []
+  );
+
+  setUnlockedLevels(
+    progress.unlocked_levels ?? [
+      "beginner",
+    ]
+  );
+}
+
+    hasLoadedProgress.current = true;
+  }
+
+  loadProgress();
+}, []);
+
+useEffect(() => {
+  if (
+    !userId ||
+    !hasLoadedProgress.current
+  ) {
+    return;
+  }
+
+  saveUserProgress(userId, {
+    completed_lessons:
+      completedLessons,
+
+    completed_locations:
+      completedLocations,
+
+    completed_side_quests:
+      completedSideQuests,
+
+    badges,
+
+    unlocked_levels:
+      unlockedLevels,
+  });
+
+  updateUserXp(userId, xp);
+}, [
+  userId,
+  xp,
+  badges,
+  completedLessons,
+  completedLocations,
+  completedSideQuests,
+  unlockedLevels,
+]);
 
   // =========================
   // ACTIVE CAMPAIGN CONTENT

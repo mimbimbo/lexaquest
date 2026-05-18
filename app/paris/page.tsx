@@ -140,6 +140,7 @@ export default function ParisPage() {
       onNext={game.nextConjugationChallenge}
       onRestart={game.restartConjugationSprint}
       onBack={() => game.setScreen("map")}
+      english={game.currentConjugationChallenge.english}
     />
   );
 }

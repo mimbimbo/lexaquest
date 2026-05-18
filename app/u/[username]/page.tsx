@@ -15,14 +15,12 @@ export default async function UserProfilePage({
 
   const username = rawUsername.trim().toLowerCase();
 
-  const {
-    data: profile,
-    error: profileError,
-  } = await supabase
+const { data: profile, error: profileError } =
+  await supabase
     .from("profiles")
     .select("*")
-    .eq("username", username)
-    .single();
+    .ilike("username", username)
+    .maybeSingle();
 
   if (
     profileError ||
